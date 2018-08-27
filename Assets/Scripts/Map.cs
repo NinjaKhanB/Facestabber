@@ -15,6 +15,8 @@ public class Map{
 
 	}
     public void Generate(int playerNumber,int regularity){
+		float smallestTile = 0.001f;
+
         int villageCount = 5 * playerNumber;
         int townCount =  2 * playerNumber;
         int cityCount = (int)Mathf.Ceil(playerNumber / 3);
@@ -104,12 +106,13 @@ public class Map{
 				}
 			}
 		}
-		//Order Edges and Neighbors
+		//Order Edges and Neighbors according to the circle
 		for (int l = 0; l < tiles.Length; l++) {
 			Tile tile = tiles[l];
+			//Edges
 			Edge[] oldEdges = tile.edges;
 			Edge[] orderedEdges = new Edge[oldEdges.Length];
-			int lastFound = 0; //Last matching point pos
+			int lastFound = 0; //Last matching point pos within the edge
 			for (int n = 1; n < orderedEdges.Length; n++) {
 				Vector2 findPoint;
 				if (lastFound == 0) {
@@ -131,16 +134,35 @@ public class Map{
 						}
 						if (found) {
 							orderedEdges[n] = oldEdge;
-
-
+							oldEdges[o] = null;
 						}
-
 					}
-					
+				}
+			}
+			//Neighbors
+			Tile[] orderedNeighbors = new Tile[tile.neighbors.Length];
+			for (int n = 0; n < orderedNeighbors.Length; n++) {
+				Edge edge = orderedEdges[n];
+				if (edge.neighbor0 != tile) {
+					orderedNeighbors[n] = edge.neighbor0;
+					edge.neighborNumber1 = n;
+				} else {
+					orderedNeighbors[n] = edge.neighbor1;
+					edge.neighborNumber0 = n;
+				}
+			}
+			tile.edges = orderedEdges; //Setting Proper
+			tile.neighbors = orderedNeighbors;
+		}
+		for (int l = 0; l < tiles.Length; l++) {
+			Tile tile = tiles[l];
+			for (int m = 0; m < tile.edges.Length; m++) {
+				Edge edge = tile.edges[m];
+				if (Vector2.Distance(edge.p0,edge.p1) < smallestTile) {
+					edge.kill();
 				}
 			}
 		}
-
 	}
 
 	//Funcitions
