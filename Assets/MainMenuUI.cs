@@ -246,6 +246,7 @@ namespace Face.UI
 
 		public void OnQuitGameClicked ()
 		{
+			Debug.LogError ("Quitting");
 			Application.Quit ();
 		}
 
