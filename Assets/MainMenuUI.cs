@@ -235,11 +235,13 @@ namespace Face.UI
 
 		public void OnCreateGameClicked ()
 		{
+			Debug.LogError ("Creating");
 			DoIfNetworkReady (GoToCreateGamePanel);
 		}
 
 		public void OnFindGameClicked ()
 		{
+			Debug.LogError ("Finding");
 			// Set network into matchmaking search mode
 			DoIfNetworkReady (GoToFindGamePanel);
 		}
