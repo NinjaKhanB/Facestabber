@@ -22,7 +22,7 @@ public class Map{
 		int townCount = 2 * playerNumber;
 		int cityCount = (int)Mathf.Ceil(playerNumber / 3f);
 
-		int tileNum = playerNumber * 150;
+		int tileNum = playerNumber * 96;
 		List<Vector2f> pointPos = new List<Vector2f>(); //Making random Voronoi Sites
 		for (int l = 0; l < tileNum; l++) {
 			float x = UnityEngine.Random.Range(0f, width);
@@ -46,7 +46,7 @@ public class Map{
 			for (int m = 0; m < curEdges.Count; m++) {
 				Vector2 p0 = V2f(curEdges[m].p0);
 				Vector2 p1 = V2f(curEdges[m].p1);
-				float close = 0.0001f;
+				float close = 0.0000005f;
 				if (Mathf.Abs(p0.x) <= close || Mathf.Abs(width - p0.x) <= close) {
 					hZeros.Add(p0);
 				}
@@ -161,6 +161,7 @@ public class Map{
 		//Order Edges and Neighbors according to the circle
 		for (int l = 0; l < tiles.Length; l++) {
 			Tile tile = tiles[l];
+			tile.refInt = l;
 			//Edges
 			Edge[] edges = tile.edges;
 			float[] angles = new float[edges.Length];
@@ -172,7 +173,7 @@ public class Map{
 			//Neighbors
 			Tile[] orderedNeighbors = new Tile[tile.neighbors.Length];
 			for (int n = 0; n < orderedNeighbors.Length; n++) {
-				//Debug.DrawLine(tile.sitePoint, tile.neighbors[n].sitePoint, Color.cyan, Mathf.Infinity);
+				Debug.DrawLine(tile.sitePoint, tile.neighbors[n].sitePoint, Color.cyan, Mathf.Infinity);
 				Edge edge = edges[n];
 				if (edge.neighbor0 != tile) {
 					orderedNeighbors[n] = edge.neighbor0;
@@ -213,11 +214,11 @@ public class Map{
 		//Building meshes
 		for (int l = 0; l < tiles.Length; l++) {
 			Tile tile = tiles[l];
-			/*/Debugging..........................................................................
+			//Debugging..........................................................................
 			for (int q = 0; q < tile.edges.Length; q++) {
 				Debug.DrawLine(tile.edges[q].p0, tile.edges[q].p1, Color.green, Mathf.Infinity);
 			}
-			*///End Debugging......................................................................
+			//End Debugging......................................................................
 			tile.meshBuilder();
 		}
 		return true;
